@@ -6,6 +6,7 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"errors"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -131,10 +132,17 @@ func (n *Node) Print(indent int) {
 	}
 }
 
+var (
+	flagPath string
+)
+
 func main() {
+	flag.StringVar(&flagPath, "path", ".", "directory to search for certificates")
+	flag.Parse()
+
 	pool := NewCertPool()
 
-	err := filepath.Walk(".",
+	err := filepath.Walk(flagPath,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
